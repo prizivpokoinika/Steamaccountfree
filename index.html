@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунты Steam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #58a6ff;
+        }
+        .header p {
+            color: #8b949e;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .header a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .search-box {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-size: 16px;
+            margin-bottom: 30px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus {
+            border-color: #58a6ff;
+        }
+        .search-box::placeholder {
+            color: #484f58;
+        }
+        .post {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s;
+        }
+        .post:hover {
+            border-color: #58a6ff;
+        }
+        .post .game {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f0f6fc;
+            margin-bottom: 12px;
+        }
+        .post .credentials {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            border-left: 3px solid #58a6ff;
+        }
+        .post .credentials span {
+            display: block;
+            padding: 4px 0;
+        }
+        .post .credentials .label {
+            color: #8b949e;
+            font-weight: 300;
+        }
+        .post .copy-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+        .post .copy-btn:hover {
+            background: #30363d;
+        }
+        .no-results {
+            text-align: center;
+            color: #8b949e;
+            padding: 40px 0;
+            display: none;
+        }
+        .footer {
+            text-align: center;
+            color: #484f58;
+            font-size: 13px;
+            padding: 30px 0 10px;
+            border-top: 1px solid #30363d;
+            margin-top: 20px;
+        }
+        .comments-section {
+            margin-top: 40px;
+            border-top: 1px solid #30363d;
+            padding-top: 30px;
+        }
+        .comments-section h3 {
+            color: #f0f6fc;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #161b22;
+            border: 1px solid #30363d;
+            padding: 12px 24px;
+            border-radius: 10px;
+            color: #c9d1d9;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        /* Cusdis тёмная тема */
+        #cusdis_thread {
+            margin-top: 20px;
+        }
+        .cusdis-dark {
+            --cusdis-bg: #0d1117 !important;
+            --cusdis-text: #c9d1d9 !important;
+            --cusdis-border: #30363d !important;
+            --cusdis-input-bg: #161b22 !important;
+            --cusdis-input-border: #30363d !important;
+            --cusdis-btn-bg: #21262d !important;
+            --cusdis-btn-hover: #30363d !important;
+            --cusdis-link: #58a6ff !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🎮 Общие аккаунты Steam</h1>
+        <p>наш telegram: <a href="https://t.me/FREEaccountssSTEAM" target="_blank">@FREEaccountssSTEAM</a></p>
+    </div>
+
+    <input type="text" class="search-box" id="searchInput" placeholder="🔍 Найти игру по названию..." onkeyup="filterPosts()">
+
+    <div id="postsContainer">
+
+    <div class="no-results" id="noResults">❌ Игр по вашему запросу не найдено</div>
+
+    <!-- === КОММЕНТАРИИ CUSDIS === -->
+    <div class="comments-section">
+        <h3>💬 Отзывы и обсуждение</h3>
+
+        <!-- ВСТАВЬТЕ СВОЙ APP_ID В СТРОКУ НИЖЕ -->
+        <div id="cusdis_thread"
+            data-host="https://cusdis.com"
+            data-app-id="ВАШ_APP_ID_ЗДЕСЬ"
+            data-page-id="steam-accounts"
+            data-page-url="https://ваш-сайт.com"
+            data-page-title="Аккаунты Steam"
+            data-theme="dark"
+            data-lang="ru">
+        </div>
+
+        <script>
+            (function() {
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://cusdis.com/js/cusdis.es.js';
+                s.async = true;
+                s.setAttribute('data-host', 'https://cusdis.com');
+                s.setAttribute('data-app-id', 'ВАШ_APP_ID_ЗДЕСЬ');
+                s.setAttribute('data-page-id', 'steam-accounts');
+                s.setAttribute('data-page-url', 'https://ваш-сайт.com');
+                s.setAttribute('data-page-title', 'Аккаунты Steam');
+                s.setAttribute('data-theme', 'dark');
+                s.setAttribute('data-lang', 'ru');
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+
+        <p style="color:#484f58; font-size:12px; margin-top:10px; text-align:center;"
+        </p>
+    </div>
+
+    <div class="footer">
+        Аккаунты проверяются вручную если появилсь пробелмы пишите в коментарии
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // === ПОИСК ===
+        function filterPosts() {
+            const input = document.getElementById('searchInput').value.toLowerCase().trim();
+            const posts = document.querySelectorAll('.post');
+            const noResults = document.getElementById('noResults');
+            let found = false;
+            posts.forEach(post => {
+                const gameName = post.getAttribute('data-game') || '';
+                if (gameName.includes(input) || input === '') {
+                    post.style.display = 'block';
+                    found = true;
+                } else {
+                    post.style.display = 'none';
+                }
+            });
+            noResults.style.display = (found || input === '') ? 'none' : 'block';
+        }
+
+        // === КОПИРОВАНИЕ ===
+        function copyText(login, password) {
+            const text = `Логин: ${login}\nПароль: ${password}`;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Скопировано в буфер обмена!');
+            }).catch(() => {
+                alert('Скопируйте вручную:\n' + text);
+            });
+        }
+
+        // === УВЕДОМЛЕНИЕ ===
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toast.timeout);
+            toast.timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        window.onload = filterPosts;
+    </script>
+
+</body>
+</html>
